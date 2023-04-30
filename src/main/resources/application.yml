@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  error:
+    include-binding-errors: always
+
+spring:
+  application:
+    name: 'BudgetFy'
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/wallet'
+    username: 'postgres'
+    password: 'ninja'
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: never
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    banner:
+      location: /log/banner.txt banner.txt
+
+#  flyway:
+#    url: 'jdbc:postgresql://localhost:5432/wallet'
+#    schemas: 'wallet'
+#    user: 'postgres'
+#    password: 'ninja'
+#    validate-on-migrate: false
+#    out-of-order: true
+
+jwt:
+  token:
+    ttl: 604800000
+  secretKey: '404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970'
