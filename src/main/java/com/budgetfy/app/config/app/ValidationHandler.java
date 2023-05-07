@@ -17,15 +17,27 @@ import java.util.Map;
 @ControllerAdvice
 public class ValidationHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Handles MethodArgumentNotValidException by extracting the field errors and
+     * returning them as a map.
+     *
+     * @param ex      the exception
+     * @param headers the HTTP headers
+     * @param status  the HTTP status code
+     * @param request the current request
+     * @return a response entity with a map of field errors and their corresponding messages
+     */
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  @NonNull HttpHeaders headers,
-                                                                  @NonNull HttpStatusCode status,
-                                                                  @NonNull WebRequest request) {
-
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
+    ) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
 
+        // Loop through all the field errors and add them to the errors map
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();
             errors.put(fieldName, message);
@@ -33,6 +45,5 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         });
 
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-
     }
 }

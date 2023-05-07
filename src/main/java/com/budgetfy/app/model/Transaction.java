@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -23,9 +22,6 @@ public class Transaction extends BaseEntity {
 
     @Column(nullable = false)
     private String note;
-
-    @Column(nullable = false)
-    private String payee;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -49,10 +45,6 @@ public class Transaction extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "t_account_id")
-    private Account t_account;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

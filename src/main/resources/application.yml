@@ -1,15 +1,15 @@
 server:
-  port: 8080
+  port: 7898
   error:
     include-binding-errors: always
 
 spring:
   application:
-    name: 'BudgetFy'
+    name: BudgetFy
   datasource:
-    url: 'jdbc:postgresql://localhost:5432/wallet'
-    username: 'postgres'
-    password: 'ninja'
+    url: jdbc:postgresql://localhost:5432/MyDb
+    username: postgres
+    password: ninja
     driver-class-name: org.postgresql.Driver
   sql:
     init:
@@ -24,15 +24,15 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     banner:
-      location: /log/banner.txt banner.txt
+      location: banner.txt
 
-#  flyway:
-#    url: 'jdbc:postgresql://localhost:5432/wallet'
-#    schemas: 'wallet'
-#    user: 'postgres'
-#    password: 'ninja'
-#    validate-on-migrate: false
-#    out-of-order: true
+  flyway:
+    url: jdbc:postgresql://localhost:5432/MyDb
+#    schemas: budgetFy
+    user: postgres
+    password: ninja
+    validate-on-migrate: false
+    out-of-order: true
 
 jwt:
   token:

@@ -6,7 +6,7 @@ import com.budgetfy.app.payload.response.ApiResponse;
 import java.util.List;
 
 public interface TransactionService {
-    ApiResponse deleteAllById(ItemList itemList);
-    ApiResponse loadTransactions(Integer pageNo, Integer pageSize, String sortBy);
+    ApiResponse deleteByIds(ItemList itemList);
+    ApiResponse loadTransactions(Integer pageNo, Integer pageSize, String sortBy, ItemList itemList);
     ApiResponse loadTransactionsByAccountId(Integer accountId, Integer pageNo, Integer pageSize, String sortBy);
 }

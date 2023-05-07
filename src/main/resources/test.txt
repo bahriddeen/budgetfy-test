@@ -1,0 +1,40 @@
+1. Authentication (Login/SignUp)
+   SignUp => Done
+   LogIn => Done
+   LogOut => Done
+
+2. User
+   getUsers => Done
+   getOne => Done
+   resetPassword => Done
+   delete => Done
+
+3. Account
+   GetOne => Done
+   Update => Done
+   DeleteById => Done
+   Create => Done
+   UserAccounts => Done
+   Search => Done
+   DeleteAllByUser => Done
+
+4. Category
+   Get List => Done
+   Get one => Done
+   Update => Done
+   Delete => Done
+   Create => Done
+
+5. Template
+   getOne => Done
+   Update => Done
+   Delete => Done
+   Create => Done
+   getByUserId => Done
+   Search => Done
+
+6. Transactions
+
+    //TODO: Need to check all logic!
+
+

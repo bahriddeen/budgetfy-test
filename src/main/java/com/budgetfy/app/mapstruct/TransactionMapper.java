@@ -12,14 +12,14 @@ import java.util.List;
 public interface TransactionMapper extends ObjectMapper<TransactionDTO, Transaction> {
 
     @Override
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(source = "accountId", target = "account")
-    @Mapping(source = "t_accountId", target = "t_account")
     @Mapping(source = "categoryId", target = "category")
     Transaction mapDTOToEntity(TransactionDTO transactionDTO);
 
     @Override
     @Mapping(source = "account.id", target = "accountId")
-    @Mapping(source = "t_accountId.id", target = "t_accountId")
     @Mapping(source = "category.id", target = "categoryId")
     TransactionDTO mapEntityToDTO(Transaction transaction);
 

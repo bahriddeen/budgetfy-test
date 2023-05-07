@@ -11,11 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/transaction")
+@RequestMapping("api/transactions")
 @SecurityRequirement(name = OpenApi.BEARER)
 public class TransactionController {
 
@@ -48,7 +46,7 @@ public class TransactionController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse> deleteAllById(@RequestBody ItemList itemList) {
-        ApiResponse response = transactionService.deleteAllById(itemList);
+        ApiResponse response = transactionService.deleteByIds(itemList);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
@@ -67,9 +65,10 @@ public class TransactionController {
     public ResponseEntity<ApiResponse> loadTransactions(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "50") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestBody ItemList itemList
     ) {
-        ApiResponse response = transactionService.loadTransactions(pageNo, pageSize, sortBy);
+        ApiResponse response = transactionService.loadTransactions(pageNo, pageSize, sortBy, itemList);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

@@ -12,11 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+
     @NotBlank(message = "Name cannot be empty")
     private String name;
+
     @NotBlank(message = "Email cannot be empty")
     @Email(regexp = ".+[@].+[\\.].+", message = "Please provide a valid email address")
     private String email;
+
     @NotBlank(message = "Password cannot be empty")
     private String password;
 }

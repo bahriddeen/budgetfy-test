@@ -3,11 +3,11 @@ package com.budgetfy.app.payload.dto;
 import com.budgetfy.app.enums.PaymentStatus;
 import com.budgetfy.app.enums.PaymentType;
 import com.budgetfy.app.enums.TransactionType;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 public record TransactionDTO(
         Integer id,
@@ -17,7 +17,6 @@ public record TransactionDTO(
         @NotNull(message = "CategoryId cannot be null")
         Integer categoryId,
         String note,
-        String payee,
         double amount,
         @NotNull(message = "Payment type cannot be null")
         PaymentType paymentType,

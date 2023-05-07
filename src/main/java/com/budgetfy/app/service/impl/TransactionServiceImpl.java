@@ -16,11 +16,13 @@ import com.budgetfy.app.service.functionality.Read;
 import com.budgetfy.app.service.functionality.Update;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -121,8 +123,7 @@ public class TransactionServiceImpl
     }
 
     @Override
-    public ApiResponse deleteAllById(ItemList itemList) {
-
+    public ApiResponse deleteByIds(ItemList itemList) {
 
         itemList.integerList().forEach(this::delete);
 
@@ -171,7 +172,7 @@ public class TransactionServiceImpl
                 case EXPENSE -> account.setBalance(account.getBalance() - _transaction.getAmount());
 
                 case TRANSFER -> {
-                    return validAndTransfer(transactionDTO, false);
+                    return validAndTransfer(transactionDTO, true);
                 }
 
             }
@@ -188,7 +189,7 @@ public class TransactionServiceImpl
 
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-        Slice<Transaction> transactions = transactionRepository.findTransactionByAccountId(accountId, paging);
+        Page<Transaction> transactions = transactionRepository.findByAccountId(accountId, paging);
 
         if (transactions.hasContent()) {
             List<TransactionDTO> list = transactionMapper.listMapEntityToDTO(transactions.stream().toList());
@@ -203,8 +204,8 @@ public class TransactionServiceImpl
     }
 
     @Override
-    public ApiResponse loadTransactions(Integer pageNo, Integer pageSize, String sortBy) {
-
+    public ApiResponse loadTransactions(Integer pageNo, Integer pageSize, String sortBy, ItemList itemList) {
+        // Todo: there is an item list with the filtering items, so need to use this items in order to collect right data
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
         Page<Transaction> transactions = transactionRepository.findAll(paging);
@@ -223,8 +224,8 @@ public class TransactionServiceImpl
 
 
     private ApiResponse validAndTransfer(TransactionDTO transactionDTO, boolean newTransfer) {
-
-        Optional<Account> senderAccount = accountRepository.findById(transactionDTO.accountId());
+//    need to rethink this logic
+       /* Optional<Account> senderAccount = accountRepository.findById(transactionDTO.accountId());
         Optional<Account> recipientAccount = accountRepository.findById(transactionDTO.t_accountId());
 
         if (senderAccount.isEmpty() || recipientAccount.isEmpty())
@@ -236,30 +237,41 @@ public class TransactionServiceImpl
 
         double amount = transactionDTO.amount();
 
-        if (newTransfer && (_senderAccount.getBalance() < amount || amount <= 0 || transactionDTO.date().after(new Date())))
+        if (newTransfer && (_senderAccount.getBalance() < amount || amount <= 0))
             return ApiResponse.error(
-                    CONFLICT.message(),
+                    ACCOUNT_NOT_ENOUGH_MONEY.message(),
                     HttpStatus.CONFLICT.value()
             );
 
-        if (!newTransfer) {
+
+        if (transactionDTO.date().after(new Date()))
+            return ApiResponse.error(TRANSACTION_DATE_CONFLICT.message(), HttpStatus.CONFLICT.value());
+
+        if (newTransfer) {
+            _senderAccount.setBalance(_senderAccount.getBalance() - amount);
+            _recipientAccount.setBalance(_recipientAccount.getBalance() + amount);
+        } else {
             _senderAccount.setBalance(_senderAccount.getBalance() + amount);
             _recipientAccount.setBalance(_recipientAccount.getBalance() - amount);
         }
 
-        _senderAccount.setBalance(_senderAccount.getBalance() - amount);
-        _recipientAccount.setBalance(_recipientAccount.getBalance() + amount);
 
         accountRepository.saveAll(List.of(_senderAccount, _recipientAccount));
 
-        Transaction transaction = transactionMapper.mapDTOToEntity(transactionDTO);
-        transactionRepository.save(transaction);
+        Transaction senderTransaction = transactionMapper.mapDTOToEntity(transactionDTO);
+        senderTransaction.setAmount(-amount);
+
+        Transaction recipientTransaction = transactionMapper.mapDTOToEntity(transactionDTO);
+        senderTransaction.setAccount(_recipientAccount);
+        senderTransaction.setAmount(amount);
+
+        transactionRepository.save(senderTransaction);
+        transactionRepository.save(recipientTransaction);
 
         return ApiResponse.success(
                 TRANSACTION_CREATED.message(),
                 HttpStatus.CREATED.value()
-        );
-
+        );*/
+        return null;
     }
-
 }

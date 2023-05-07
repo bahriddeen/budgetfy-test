@@ -57,7 +57,6 @@ public class CategoryServiceImpl
 
     @Override
     public ApiResponse getDataById(Integer categoryId) {
-
         return categoryRepository.findById(categoryId)
                 .map(
                         category ->
@@ -72,7 +71,6 @@ public class CategoryServiceImpl
                                 HttpStatus.NOT_FOUND.value()
                         )
                 );
-
     }
 
     @Override

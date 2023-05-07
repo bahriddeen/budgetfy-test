@@ -16,6 +16,7 @@ public enum Message {
     ACCOUNT_NOT_FOUND("Account not found"),
     ACCOUNT_ALREADY_EXISTS("Account already exists with this name"),
     TOO_MANY_ACCOUNTS("Sorry, you have reached the maximum number of accounts allowed per user"),
+    ACCOUNT_NOT_ENOUGH_MONEY("The account does not have enough money"),
 
     CATEGORY_CREATED("Category has been created"),
     CATEGORY_UPDATED("Category has been updated"),
@@ -35,6 +36,7 @@ public enum Message {
     TRANSACTION_DELETED("Transaction has been deleted"),
     TRANSACTION_NOT_FOUND("Transaction not found"),
     TRANSACTION_ALREADY_EXISTS("Transaction already exists with this name"),
+    TRANSACTION_DATE_CONFLICT("Transaction date cannot be before the current date"),
 
     USER_CREATED("User has been created"),
     USER_UPDATED("User has been updated"),

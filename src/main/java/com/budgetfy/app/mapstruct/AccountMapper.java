@@ -2,7 +2,6 @@ package com.budgetfy.app.mapstruct;
 
 import com.budgetfy.app.mapstruct.base.ObjectMapper;
 import com.budgetfy.app.model.Account;
-import com.budgetfy.app.model.User;
 import com.budgetfy.app.payload.dto.AccountDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,6 +13,8 @@ public interface AccountMapper extends ObjectMapper<AccountDTO, Account> {
 
     @Override
     @Mapping(source = "userId", target = "user")
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     Account mapDTOToEntity(AccountDTO accountDTO);
 
     @Override

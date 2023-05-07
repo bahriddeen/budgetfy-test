@@ -5,6 +5,7 @@ import com.budgetfy.app.model.Category;
 import com.budgetfy.app.payload.dto.CategoryDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -12,7 +13,9 @@ import java.util.List;
 public interface CategoryMapper extends ObjectMapper<CategoryDTO, Category> {
 
     @Override
-    @Mapping(source = "parentId", target = "parent")
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(source = "parentId", target = "parent", qualifiedByName = "parentIdToCategory")
     Category mapDTOToEntity(CategoryDTO categoryDTO);
 
     @Override
@@ -24,7 +27,7 @@ public interface CategoryMapper extends ObjectMapper<CategoryDTO, Category> {
 
     @Override
     List<CategoryDTO> listMapEntityToDTO(List<Category> categories);
-
+    @Named("parentIdToCategory")
     default Category parentId(Integer parentId) {
 
         if (parentId == null) return null;

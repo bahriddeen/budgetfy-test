@@ -4,25 +4,15 @@ import com.budgetfy.app.config.swagger.OpenApi;
 import com.budgetfy.app.payload.dto.AccountDTO;
 import com.budgetfy.app.payload.response.ApiResponse;
 import com.budgetfy.app.service.impl.AccountServiceImpl;
-
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.RequiredArgsConstructor;
-
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/settings/account")
+@RequestMapping("api/settings/accounts")
 @SecurityRequirement(name = OpenApi.BEARER)
 public class AccountController {
 
@@ -50,11 +40,6 @@ public class AccountController {
     public ResponseEntity<ApiResponse> delete(@PathVariable Integer accountId) {
         ApiResponse response = accountService.delete(accountId);
         return ResponseEntity.status(response.getStatus()).body(response);
-    }
-
-    @DeleteMapping("user/{userId}")
-    public void deleteUserAccounts(@PathVariable Integer userId) {
-        accountService.deleteUserAccounts(userId);
     }
 
     @GetMapping("user-accounts/{userId}")

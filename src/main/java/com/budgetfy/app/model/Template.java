@@ -8,9 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 @Getter
 @Setter
 @Entity
@@ -21,9 +18,6 @@ public class Template extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
-
-    @Column
-    private String payee;
 
     @Column
     private String note;

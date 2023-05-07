@@ -4,11 +4,13 @@ import com.budgetfy.app.mapstruct.UserMapper;
 import com.budgetfy.app.model.User;
 import com.budgetfy.app.payload.dto.UserDTO;
 import com.budgetfy.app.payload.response.ApiResponse;
-import com.budgetfy.app.repository.UserRepository;
+import com.budgetfy.app.repository.*;
 import com.budgetfy.app.service.UserService;
 import com.budgetfy.app.service.functionality.Delete;
 import com.budgetfy.app.service.functionality.Read;
+import com.budgetfy.app.utils.TransactionUtils;
 import com.budgetfy.app.utils.Utils;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 import static com.budgetfy.app.enums.Message.USER_DELETED;
 import static com.budgetfy.app.enums.Message.USER_NOT_FOUND;
@@ -37,7 +40,11 @@ public class UserServiceImpl
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
+    private final TemplateRepository templateRepository;
+    private final TransactionRepository transactionRepository;
     private final Logger log = LoggerFactory.getLogger(LogoutService.class);
 
     /**
@@ -70,21 +77,35 @@ public class UserServiceImpl
      * @return an ApiResponse with the HTTP status
      */
     @Override
+    @Transactional
     public ApiResponse delete(Integer userId) {
 
-        if (userRepository.deleteUserById(userId)) {
-            return ApiResponse.success(
-                    USER_DELETED.message(),
-                    HttpStatus.NO_CONTENT.value()
+        Optional<User> optionalUser = userRepository.findById(userId);
+
+        if (optionalUser.isEmpty())
+            return ApiResponse.error(
+                    USER_NOT_FOUND.message(),
+                    HttpStatus.NOT_FOUND.value()
             );
-        }
+
+        List<Integer> accountIds = accountRepository.getUserAccountIds(userId);
+
+        templateRepository.deleteAllByUserId(userId);
+
+        accountIds.forEach(accountId -> TransactionUtils.deleteTransactionsInBatch(transactionRepository, accountId));
+
+        accountRepository.deleteAllByUserId(userId);
+        tokenRepository.deleteAllByUserId(userId);
+        userRepository.deleteById(userId);
 
         return ApiResponse.success(
-                USER_NOT_FOUND.message(),
-                HttpStatus.NOT_FOUND.value()
+                USER_DELETED.message(),
+                HttpStatus.NO_CONTENT.value()
         );
 
+
     }
+
 
     public void changePassword(String password) {
 
@@ -93,7 +114,7 @@ public class UserServiceImpl
                         user -> {
                             String encryptedPassword = passwordEncoder.encode(password);
                             user.setPassword(encryptedPassword);
-//                            userRepository.save(user); TODO: Test here
+                            userRepository.save(user);
                             log.debug("Changed password for User: {}", user);
                         }
                 );

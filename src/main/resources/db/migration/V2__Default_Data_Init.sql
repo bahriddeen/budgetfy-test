@@ -1,6 +1,7 @@
-INSERT INTO role (role, active)
-VALUES ('USER', true),
-       ('ADMIN', true);
+INSERT INTO role (role, active, created_at)
+VALUES ('ROLE_USER', true, now()),
+       ('ROLE_ADMIN', true, now()),
+       ('ROLE_ANONYMOUS', true, now());
 
 INSERT INTO categories (name, show, parent_id, created_at)
 values ('Food & Drinks', true, null, now()),

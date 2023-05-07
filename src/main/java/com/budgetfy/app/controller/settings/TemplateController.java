@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/settings/template")
+@RequestMapping("api/settings/templates")
 @SecurityRequirement(name = OpenApi.BEARER)
 public class TemplateController {
 

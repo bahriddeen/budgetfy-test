@@ -13,5 +13,6 @@ public class Constants {
     public static final String THIRTY_DAYS = "30 days";
     public static final String NINETY_DAYS = "90 days";
     public static final String TWELVE_MONTHS = "12 months";
+    public static final int MAX_ACCOUNTS_PER_USER = 10;
 
 }

@@ -1,10 +1,7 @@
 package com.budgetfy.app.mapstruct;
 
 import com.budgetfy.app.mapstruct.base.ObjectMapper;
-import com.budgetfy.app.model.Account;
-import com.budgetfy.app.model.Category;
 import com.budgetfy.app.model.Template;
-import com.budgetfy.app.model.User;
 import com.budgetfy.app.payload.dto.TemplateDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,6 +13,8 @@ public interface TemplateMapper
         extends ObjectMapper<TemplateDTO, Template> {
 
     @Override
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     @Mapping(source = "userId", target = "user")
     @Mapping(source = "accountId", target = "account")
     @Mapping(source = "categoryId", target = "category")

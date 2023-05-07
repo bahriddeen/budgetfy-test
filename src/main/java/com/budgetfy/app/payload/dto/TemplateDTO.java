@@ -16,11 +16,10 @@ public record TemplateDTO(
         Integer categoryId,
         @NotBlank(message = "Name cannot be empty")
         String name,
-        String payee,
         String note,
         @NotNull(message = "Payment type cannot be null")
         PaymentType paymentType,
         double amount,
-        boolean isExpense
+        boolean expense
         ) {
 }

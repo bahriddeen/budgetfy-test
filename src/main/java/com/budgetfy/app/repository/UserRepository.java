@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByEmail(String email);
-    boolean deleteUserById(Integer userId);
     Optional<User> findByEmail(String email);
     List<User> findAllByActiveIsTrue(Pageable pageable);
     List<User> findAllByActiveIsFalseAndCreatedAtBefore(Instant dateTime);

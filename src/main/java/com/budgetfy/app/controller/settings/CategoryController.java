@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/settings/category")
+@RequestMapping("api/settings/categories")
 @SecurityRequirement(name = OpenApi.BEARER)
 public class CategoryController {
 
@@ -40,12 +40,19 @@ public class CategoryController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponse> get() {
+        ApiResponse response = categoryService.getCategories();
+        return ResponseEntity.status(response.getStatus()).body(response);
+    }
+// Only Admin
     @PutMapping("{categoryId}")
     public ResponseEntity<ApiResponse> update(@PathVariable Integer categoryId, @Valid @RequestBody CategoryDTO categoryDTO) {
         ApiResponse response = categoryService.update(categoryId, categoryDTO);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
+// Only Admin
     @DeleteMapping("{categoryId}")
     public ResponseEntity<ApiResponse> delete(@PathVariable Integer categoryId) {
         ApiResponse response = categoryService.delete(categoryId);

@@ -2,16 +2,17 @@ package com.budgetfy.app.service.impl;
 
 import com.budgetfy.app.mapstruct.AccountMapper;
 import com.budgetfy.app.model.Account;
-import com.budgetfy.app.model.User;
 import com.budgetfy.app.payload.dto.AccountDTO;
 import com.budgetfy.app.payload.response.ApiResponse;
 import com.budgetfy.app.repository.AccountRepository;
-import com.budgetfy.app.repository.UserRepository;
+import com.budgetfy.app.repository.TemplateRepository;
+import com.budgetfy.app.repository.TransactionRepository;
 import com.budgetfy.app.service.AccountService;
 import com.budgetfy.app.service.functionality.Create;
 import com.budgetfy.app.service.functionality.Delete;
 import com.budgetfy.app.service.functionality.Read;
 import com.budgetfy.app.service.functionality.Update;
+import com.budgetfy.app.utils.TransactionUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.budgetfy.app.enums.Message.*;
 import static com.budgetfy.app.utils.Utils.getCurrentUser;
-import static com.budgetfy.app.utils.constants.Constants.*;
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +36,8 @@ public class AccountServiceImpl
 
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
+    private final TemplateRepository templateRepository;
+    private final TransactionRepository transactionRepository;
 
     public ApiResponse create(AccountDTO accountDTO) {
 
@@ -68,7 +68,6 @@ public class AccountServiceImpl
                     HttpStatus.INTERNAL_SERVER_ERROR.value()
             );
 
-
         return ApiResponse.success(
                 ACCOUNT_CREATED.message(),
                 HttpStatus.CREATED.value()
@@ -78,7 +77,6 @@ public class AccountServiceImpl
 
     @Override
     public ApiResponse getDataById(Integer accountId) {
-
         return accountRepository.findById(accountId)
                 .map(accountMapper::mapEntityToDTO)
                 .map(
@@ -94,13 +92,11 @@ public class AccountServiceImpl
                                 HttpStatus.NOT_FOUND.value()
                         )
                 );
-
     }
 
 
     @Override
     public ApiResponse update(Integer accountId, AccountDTO accountDTO) {
-
         return accountRepository.findById(accountId)
                 .map(
                         account -> {
@@ -123,35 +119,28 @@ public class AccountServiceImpl
                         )
 
                 );
-
     }
 
     @Override
-    public ApiResponse delete(Integer accountId) {
+    public ApiResponse delete(Integer id) {
 
-        Optional<Account> account = accountRepository.findById(accountId);
-
-        if (account.isPresent()) {
-
-            accountRepository.deleteById(accountId);
+        if (accountRepository.existsById(id)) {
+            templateRepository.deleteAllByAccountId(id);
+            accountRepository.deleteById(id);
+            TransactionUtils.deleteTransactionsInBatch(transactionRepository, id);
 
             return ApiResponse.success(
-                    DATA_DELETED.message(),
-                    HttpStatus.NO_CONTENT.value()
+                    ACCOUNT_DELETED.message(),
+                    HttpStatus.OK.value()
             );
-
         }
 
         return ApiResponse.error(
                 ACCOUNT_NOT_FOUND.message(),
                 HttpStatus.NOT_FOUND.value()
         );
-
     }
 
-    public void deleteUserAccounts(Integer userId) {
-        accountRepository.deleteAllByUserId(userId);
-    }
 
     @Override
     public ApiResponse getUserAccounts(Integer userId) {

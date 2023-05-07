@@ -51,9 +51,7 @@ create table account
     balance         numeric(10, 2),
     color           varchar(255) not null,
     currency        varchar(255) not null,
-    name            varchar(255) not null
-        constraint uk_bb9lrmwswqvhcy1y430ki00ir
-            unique,
+    name            varchar(255) not null,
     show_statistics boolean      not null,
     user_id         integer      not null
         constraint fkra7xoi9wtlcq07tmoxxe5jrh4
@@ -72,7 +70,6 @@ create table template
         constraint uk_mc6r7feujo1wdd6vw5esv4jba
             unique,
     note         varchar(255),
-    payee        varchar(255),
     payment_type varchar(255) not null,
     account_id   integer      not null
         constraint fk2t3w5v1eswbrafxtc12nyl2c4

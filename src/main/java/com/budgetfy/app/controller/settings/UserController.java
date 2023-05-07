@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/settings/user")
+@RequestMapping("api/settings/users")
 @SecurityRequirement(name = OpenApi.BEARER)
 public class UserController {
 
@@ -42,7 +42,7 @@ public class UserController {
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
-    @DeleteMapping("{resetPassword}")
+    @PostMapping("/reset-password/{resetPassword}")
     public ResponseEntity<?> resetPassword(@PathVariable String resetPassword) {
         if (!checkPasswordLength(resetPassword))
             return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
